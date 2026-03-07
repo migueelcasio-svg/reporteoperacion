@@ -177,12 +177,42 @@
   .rep-ft { border-top:1.5px solid var(--border); padding:10px 16px; display:flex; justify-content:space-between; }
   .rep-ft span { font-family:var(--mono); font-size:0.48rem; color:var(--subtle); letter-spacing:1px; }
 
+  /* CAPTURE MODE */
+  body.capture-mode .app-header,
+  body.capture-mode .rep-bar,
+  body.capture-mode #formSection { display:none!important; }
+  body.capture-mode { background:#f8fafc; padding:0; }
+  body.capture-mode .container { padding:6px; max-width:100%; }
+  .capture-exit { display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--text); color:#fff; border:none; padding:12px 28px; border-radius:30px; font-size:0.85rem; font-weight:600; cursor:pointer; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,0.35); font-family:var(--sans); letter-spacing:0.3px; }
+  body.capture-mode .capture-exit { display:block; }
+
   @media print {
-    .app-header,#formSection,.rep-bar { display:none!important; }
-    body { background:#fff; padding:0; }
+    .app-header,#formSection,.rep-bar,.capture-exit { display:none!important; }
+    body { background:#fff; padding:0; margin:0; }
     .container { padding:0; max-width:100%; }
     #repSection { display:block!important; }
-    .report { border:none; border-radius:0; }
+    .report { border:none; border-radius:0; box-shadow:none; }
+    .rb { padding:10px 12px; }
+    .rh { padding:14px 14px; }
+    .kpi-grid { gap:6px; margin-bottom:8px; }
+    .kpi { padding:10px 10px 8px; }
+    .kpi-v { font-size:1.3rem; }
+    .prog { padding:8px 10px; }
+    .rs { margin-bottom:10px; }
+    .rs-title { margin-bottom:6px; font-size:0.48rem; }
+    .ctx-row { gap:6px; }
+    .dem-box,.clima-box { padding:7px 10px; }
+    .eq-grid { gap:8px; }
+    .eq-row { padding:6px 9px; margin-bottom:3px; }
+    .ibox { padding:5px 9px; margin-top:4px; }
+    .ibox-t,.num-txt { font-size:0.74rem; line-height:1.5; }
+    .seg-ok,.seg-inc { padding:8px 10px; }
+    .num-item { padding:7px 10px; }
+    .rot-sum { padding:6px 9px; font-size:0.7rem; }
+    .rep-ft { padding:6px 12px; }
+    .rh-date { font-size:1.1rem; }
+    .prog-a { font-size:1.1rem; }
+    @page { margin:8mm; size:A4 portrait; }
   }
   @media(max-width:420px) {
     .eq-grid { grid-template-columns:1fr; }
@@ -320,11 +350,13 @@
       <span class="rep-bar-lbl">Vista de Reporte</span>
       <div class="rep-acts">
         <button class="btn-edit2" onclick="goEdit()">← Editar</button>
-        <button class="btn-print2" onclick="window.print()">🖨 Imprimir</button>
+        <button class="btn-edit2" onclick="captureMode()">📸 Captura</button>
+        <button class="btn-print2" onclick="window.print()">⬇ PDF</button>
       </div>
     </div>
     <div class="report" id="repContent"></div>
   </div>
+  <button class="capture-exit" onclick="exitCapture()">✕ Salir de captura</button>
 
 </div>
 
@@ -468,6 +500,9 @@ function genReport(){
 }
 
 function goEdit(){ document.getElementById('repSection').classList.remove('on'); document.getElementById('formSection').style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
+
+function captureMode(){ document.body.classList.add('capture-mode'); window.scrollTo({top:0,behavior:'instant'}); }
+function exitCapture(){ document.body.classList.remove('capture-mode'); }
 </script>
 </body>
 </html>
