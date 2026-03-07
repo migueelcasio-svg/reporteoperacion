@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Turno — Reporte Operacional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --bg:#f1f5f9; --card:#fff; --border:#e2e8f0;
+    --text:#1e293b; --muted:#64748b; --subtle:#94a3b8;
+    --green:#16a34a; --green-bg:#f0fdf4; --green-b:#bbf7d0;
+    --red:#dc2626;   --red-bg:#fef2f2;   --red-b:#fecaca;
+    --blue:#2563eb;  --blue-bg:#eff6ff;  --blue-b:#bfdbfe;
+    --amber:#d97706; --amber-bg:#fffbeb; --amber-b:#fde68a;
+    --sans:'DM Sans',sans-serif; --mono:'DM Mono',monospace; --serif:'DM Serif Display',serif;
+  }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; padding-bottom:40px; }
+
+  /* HEADER */
+  .app-header { background:#fff; border-bottom:1.5px solid var(--border); padding:16px 18px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; box-shadow:0 1px 8px rgba(0,0,0,0.05); }
+  .app-title { font-family:var(--serif); font-size:1.55rem; color:var(--text); line-height:1; }
+  .app-sub { font-family:var(--mono); font-size:0.5rem; color:var(--muted); letter-spacing:2px; margin-top:3px; }
+  .date-badge { font-family:var(--mono); font-size:0.62rem; color:var(--muted); background:var(--bg); border:1.5px solid var(--border); padding:5px 10px; border-radius:20px; white-space:nowrap; }
+
+  /* LAYOUT */
+  .container { max-width:640px; margin:0 auto; padding:14px 13px; display:flex; flex-direction:column; gap:13px; }
+
+  /* CARD */
+  .card { background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:18px 16px; }
+  .section-title { display:flex; align-items:center; gap:8px; margin-bottom:15px; }
+  .st-icon { font-size:0.95rem; }
+  .st-label { font-family:var(--sans); font-weight:700; font-size:0.88rem; color:var(--text); }
+  .st-line { flex:1; height:1px; background:var(--border); }
+
+  /* FIELDS */
+  .field { display:flex; flex-direction:column; gap:5px; }
+  .fl { font-family:var(--mono); font-size:0.54rem; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+  .g2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .full { grid-column:1/-1; }
+  .fstack { display:flex; flex-direction:column; gap:13px; }
+
+  input,select,textarea,button { font-family:var(--sans); }
+  input,select,textarea {
+    background:#fff; border:1.5px solid var(--border); color:var(--text);
+    font-size:0.88rem; padding:10px 12px; width:100%; border-radius:8px; outline:none;
+    -webkit-appearance:none; appearance:none; transition:border-color .15s;
+  }
+  input:focus,select:focus,textarea:focus { border-color:var(--text); }
+  textarea { resize:vertical; min-height:62px; }
+  select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%2364748b' d='M5 7L0 2h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:30px; }
+
+  /* CHIPS */
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { background:#fff; border:1.5px solid var(--border); color:var(--muted); padding:8px 14px; border-radius:20px; font-size:0.8rem; font-weight:500; cursor:pointer; transition:all .15s; white-space:nowrap; }
+  .chip.active { background:var(--text); border-color:var(--text); color:#fff; }
+
+  /* DROPDOWN */
+  .dd-wrap { position:relative; }
+  .dd-btn { width:100%; background:#fff; border:1.5px solid var(--border); border-radius:8px; padding:10px 13px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-size:0.88rem; transition:all .15s; }
+  .dd-btn .dleft { display:flex; align-items:center; gap:8px; }
+  .dd-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .dd-val { font-weight:600; font-size:0.84rem; }
+  .dd-arr { font-size:0.62rem; color:var(--muted); }
+  .dd-menu { display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:300; background:#fff; border:1.5px solid var(--border); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.12); overflow:hidden; }
+  .dd-menu.open { display:block; }
+  .dd-item { padding:11px 13px; display:flex; align-items:center; gap:10px; cursor:pointer; font-size:0.84rem; }
+  .dd-item:active { background:var(--bg); }
+
+  /* DYNAMIC ROWS */
+  .dyn-row { display:grid; grid-template-columns:1fr 36px; gap:8px; align-items:flex-start; margin-bottom:8px; }
+  .btn-rm { background:#fff; border:1.5px solid var(--border); color:var(--red); border-radius:8px; width:36px; height:40px; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .btn-add { width:100%; background:none; border:1.5px dashed var(--border); color:var(--muted); padding:10px; font-size:0.82rem; cursor:pointer; border-radius:8px; margin-top:4px; }
+  .btn-add:active { border-color:var(--text); color:var(--text); }
+
+  /* META */
+  .meta-ind { margin-top:12px; padding:10px 13px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; display:none; }
+  .meta-ind.ok  { background:var(--green-bg); border:1.5px solid var(--green-b); }
+  .meta-ind.fail{ background:var(--red-bg);   border:1.5px solid var(--red-b); }
+  .mi-lbl { font-size:0.82rem; font-weight:600; }
+  .meta-ind.ok  .mi-lbl,.meta-ind.ok  .mi-pct { color:var(--green); }
+  .meta-ind.fail .mi-lbl,.meta-ind.fail .mi-pct { color:var(--red); }
+  .mi-pct { font-family:var(--mono); font-size:0.88rem; font-weight:700; }
+
+  /* GENERATE */
+  .btn-gen { width:100%; background:var(--text); color:#fff; border:none; padding:17px; font-weight:700; font-size:1rem; letter-spacing:0.5px; cursor:pointer; border-radius:12px; box-shadow:0 4px 14px rgba(15,23,42,0.18); -webkit-appearance:none; }
+  .btn-gen:active { opacity:0.9; }
+
+  /* ══════════ REPORT ══════════ */
+  #repSection { display:none; }
+  #repSection.on { display:block; }
+
+  .rep-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .rep-bar-lbl { font-family:var(--mono); font-size:0.55rem; color:var(--muted); letter-spacing:3px; text-transform:uppercase; }
+  .rep-acts { display:flex; gap:8px; }
+  .btn-edit2 { background:#fff; border:1.5px solid var(--border); color:var(--muted); padding:6px 13px; font-size:0.75rem; cursor:pointer; border-radius:8px; }
+  .btn-print2 { background:var(--text); color:#fff; border:none; padding:6px 13px; font-size:0.75rem; cursor:pointer; border-radius:8px; }
+
+  .report { background:#f8fafc; border-radius:16px; overflow:hidden; border:1.5px solid var(--border); }
+  .rh { background:var(--text); padding:24px 20px; color:#fff; }
+  .rh-top { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+  .rh-ey { font-family:var(--mono); font-size:0.5rem; letter-spacing:3px; color:rgba(255,255,255,0.38); text-transform:uppercase; margin-bottom:5px; }
+  .rh-date { font-family:var(--serif); font-size:1.4rem; color:#fff; line-height:1.1; margin-bottom:4px; text-transform:capitalize; }
+  .rh-sub { font-family:var(--sans); font-size:0.8rem; color:rgba(255,255,255,0.52); }
+  .rh-right { text-align:right; }
+  .rh-sl { font-family:var(--mono); font-size:0.48rem; color:rgba(255,255,255,0.35); letter-spacing:2px; margin-bottom:3px; }
+  .rh-name { font-weight:700; font-size:0.92rem; color:#fff; }
+  .rh-time { font-family:var(--mono); font-size:0.48rem; color:rgba(255,255,255,0.28); margin-top:4px; }
+
+  .rb { padding:20px 16px; }
+  .rs { margin-bottom:22px; }
+  .rs-title { font-family:var(--mono); font-size:0.54rem; letter-spacing:3px; color:var(--muted); text-transform:uppercase; margin-bottom:11px; display:flex; align-items:center; gap:8px; }
+  .rs-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  .kpi { background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:14px 14px 12px; }
+  .kpi-l { font-family:var(--mono); font-size:0.5rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:7px; }
+  .kpi-v { font-family:var(--serif); font-size:1.75rem; line-height:1; margin-bottom:4px; }
+  .kpi-s { font-size:0.7rem; color:var(--muted); }
+  .kpi-s.b { font-weight:700; }
+
+  .prog { background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:13px 15px; }
+  .prog-t { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:7px; }
+  .prog-a { font-weight:700; font-size:1.4rem; }
+  .prog-a small { font-size:0.82rem; font-weight:400; color:var(--muted); }
+  .prog-m { font-family:var(--mono); font-size:0.62rem; color:var(--muted); }
+  .prog-bg { background:var(--border); border-radius:99px; height:10px; overflow:hidden; }
+  .prog-fill { height:100%; border-radius:99px; }
+  .prog-b { display:flex; justify-content:space-between; margin-top:5px; }
+  .prog-d { font-size:0.73rem; font-weight:600; }
+  .prog-p { font-family:var(--mono); font-size:0.68rem; font-weight:700; }
+
+  .ctx-row { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; }
+  .clima-box { display:inline-flex; flex-direction:column; gap:5px; background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:11px 14px; }
+  .clima-lbl { font-family:var(--mono); font-size:0.5rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+  .clima-inner { display:flex; align-items:center; gap:9px; }
+  .clima-ico { font-size:1.5rem; }
+  .clima-nm { font-size:0.86rem; color:var(--text); }
+  .clima-al { font-size:0.68rem; margin-top:2px; }
+  .dem-box { flex:1; min-width:180px; background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:12px 14px; }
+  .dem-t { font-family:var(--mono); font-size:0.54rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; font-weight:700; margin-bottom:9px; }
+  .dem-item { display:flex; align-items:flex-start; gap:7px; margin-bottom:5px; }
+  .dem-dot { width:6px; height:6px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+
+  .eq-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .eq-ct { font-weight:700; font-size:0.78rem; color:var(--text); margin-bottom:7px; }
+  .eq-row { display:flex; align-items:center; justify-content:space-between; padding:10px 13px; border-radius:10px; margin-bottom:5px; border:1.5px solid; }
+  .eq-l { display:flex; align-items:center; gap:9px; }
+  .eq-dot { width:9px; height:9px; border-radius:50%; }
+  .eq-nm { font-weight:600; font-size:0.83rem; color:var(--text); }
+  .eq-badge { font-family:var(--mono); font-size:0.58rem; padding:2px 9px; border-radius:20px; border:1px solid; }
+  .eq-none { font-family:var(--mono); font-size:0.58rem; color:var(--subtle); }
+  .rot-sum { margin-top:7px; background:#fff; border:1.5px solid var(--border); border-radius:9px; padding:9px 12px; font-size:0.78rem; line-height:1.7; }
+  .ibox { padding:9px 13px; border-radius:9px; margin-top:7px; }
+  .ibox.bl { background:var(--blue-bg); border:1.5px solid var(--blue-b); }
+  .ibox.wh { background:#fff; border:1.5px solid var(--border); }
+  .ibox-l { font-family:var(--mono); font-size:0.48rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:3px; }
+  .ibox.bl .ibox-l { color:var(--blue); }
+  .ibox.wh .ibox-l { color:var(--muted); }
+  .ibox-t { font-size:0.82rem; color:var(--text); line-height:1.6; }
+
+  .seg-ok { background:var(--green-bg); border:1.5px solid var(--green-b); border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:9px; }
+  .seg-ok span { font-size:0.84rem; color:var(--green); font-weight:600; }
+  .seg-inc { background:var(--red-bg); border:1.5px solid var(--red-b); border-radius:12px; padding:13px 15px; }
+  .seg-tag { font-family:var(--mono); font-size:0.52rem; color:var(--red); letter-spacing:2px; text-transform:uppercase; margin-bottom:5px; }
+  .seg-txt { font-size:0.84rem; color:var(--text); line-height:1.7; }
+
+  .num-list { display:flex; flex-direction:column; gap:7px; }
+  .num-item { background:#fff; border:1.5px solid var(--border); border-radius:11px; padding:11px 14px; display:flex; gap:11px; align-items:flex-start; }
+  .num-badge { color:#fff; font-family:var(--mono); font-size:0.6rem; font-weight:700; width:21px; height:21px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  .num-txt { font-size:0.84rem; color:var(--text); line-height:1.7; }
+
+  .rep-ft { border-top:1.5px solid var(--border); padding:10px 16px; display:flex; justify-content:space-between; }
+  .rep-ft span { font-family:var(--mono); font-size:0.48rem; color:var(--subtle); letter-spacing:1px; }
+
+  @media print {
+    .app-header,#formSection,.rep-bar { display:none!important; }
+    body { background:#fff; padding:0; }
+    .container { padding:0; max-width:100%; }
+    #repSection { display:block!important; }
+    .report { border:none; border-radius:0; }
+  }
+  @media(max-width:420px) {
+    .eq-grid { grid-template-columns:1fr; }
+    .kpi-grid { grid-template-columns:1fr 1fr; }
+    .g2 { grid-template-columns:1fr; }
+    .rh-date { font-size:1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div>
+    <div class="app-title">Turno</div>
+    <div class="app-sub">REPORTE OPERACIONAL</div>
+  </div>
+  <div class="date-badge" id="hDate"></div>
+</header>
+
+<div class="container">
+
+  <!-- ══ FORMULARIO ══ -->
+  <div id="formSection">
+
+    <!-- 01 IDENTIFICACIÓN -->
+    <div class="card">
+      <div class="section-title"><span class="st-icon">🗓</span><span class="st-label">Identificación del Turno</span><div class="st-line"></div></div>
+      <div class="g2">
+        <div class="field"><div class="fl">Fecha</div><input type="date" id="fecha"></div>
+        <div class="field"><div class="fl">Turno</div>
+          <select id="turno">
+            <option value="">Seleccionar</option>
+            <option value="Turno Primera">Turno Primera · 08:00 – 16:00</option>
+            <option value="Turno Segunda">Turno Segunda · 16:00 – 00:00</option>
+            <option value="Turno Tercera">Turno Tercera · 00:00 – 08:00</option>
+          </select>
+        </div>
+        <div class="field full"><div class="fl">Supervisor / Operador</div><input type="text" id="supervisor" placeholder="Nombre completo"></div>
+        <div class="field full"><div class="fl">Área / Sector</div><input type="text" id="area" placeholder="Ej. Cantera Norte"></div>
+      </div>
+    </div>
+
+    <!-- 02 PRODUCCIÓN -->
+    <div class="card">
+      <div class="section-title"><span class="st-icon">⚙️</span><span class="st-label">Producción</span><div class="st-line"></div></div>
+      <div class="g2">
+        <div class="field"><div class="fl">Toneladas Movidas</div><input type="number" id="toneladas" placeholder="0.00" oninput="calcMeta()"></div>
+        <div class="field"><div class="fl">Meta del Turno (ton)</div><input type="number" id="metaTon" placeholder="0.00" oninput="calcMeta()"></div>
+        <div class="field full"><div class="fl">Tipo de Material</div><input type="text" id="material" placeholder="Mineral, Estéril, Desmonte..."></div>
+      </div>
+      <div id="metaInd" class="meta-ind">
+        <span class="mi-lbl"></span><span class="mi-pct"></span>
+      </div>
+    </div>
+
+    <!-- 03 CLIMA -->
+    <div class="card">
+      <div class="section-title"><span class="st-icon">🌤</span><span class="st-label">Condiciones Climáticas</span><div class="st-line"></div></div>
+      <div class="chips">
+        <button class="chip" data-val="Despejado" onclick="setClima(this)">☀️ Despejado</button>
+        <button class="chip" data-val="Lluvia" onclick="setClima(this)">🌧️ Lluvia</button>
+        <button class="chip" data-val="Alerta Roja / Rayos" onclick="setClima(this)">⚡ Alerta Roja / Rayos</button>
+        <button class="chip" data-val="Neblina" onclick="setClima(this)">🌁 Neblina</button>
+      </div>
+    </div>
+
+    <!-- 04 EQUIPO DE CARGA -->
+    <div class="card">
+      <div class="section-title"><span class="st-icon">⛏️</span><span class="st-label">Equipo de Carga</span><div class="st-line"></div></div>
+      <div class="fstack">
+        <div class="field">
+          <div class="fl">Pala P&amp;H 5-29</div>
+          <div class="dd-wrap" id="dd-carga">
+            <button class="dd-btn" onclick="ddToggle('dd-carga')">
+              <div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div>
+              <span class="dd-arr">▼</span>
+            </button>
+            <div class="dd-menu">
+              <div class="dd-item" data-val="Operativo" data-c="#16a34a" data-bg="#f0fdf4" data-br="#bbf7d0" onclick="ddSelect('dd-carga',this)"><div class="dd-dot" style="background:#16a34a"></div><span style="color:#16a34a;font-weight:600">Operativo</span></div>
+              <div class="dd-item" data-val="Mantenimiento" data-c="#dc2626" data-bg="#fef2f2" data-br="#fecaca" onclick="ddSelect('dd-carga',this)"><div class="dd-dot" style="background:#dc2626"></div><span style="color:#dc2626;font-weight:600">Mantenimiento</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="field"><div class="fl">Condiciones zona de carga</div><textarea id="condZona" placeholder="Condiciones del área de carga..."></textarea></div>
+        <div class="field"><div class="fl">Zona de descarga</div><textarea id="zonaDesc" placeholder="Condiciones de la zona de descarga..."></textarea></div>
+        <div class="field"><div class="fl">Banco</div><textarea id="banco" placeholder="Descripción del banco..."></textarea></div>
+        <div class="field"><div class="fl">Voladura</div><textarea id="voladura" placeholder="Descripción de voladura..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- 05 ROTARIAS -->
+    <div class="card">
+      <div class="section-title"><span class="st-icon">🔄</span><span class="st-label">Rotarias</span><div class="st-line"></div></div>
+      <div class="fstack">
+        <div class="field"><div class="fl">CAT6310</div><div class="dd-wrap" id="dd-r0"><button class="dd-btn" onclick="ddToggle('dd-r0')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm0"></div></div></div>
+        <div class="field"><div class="fl">ROT 1-17</div><div class="dd-wrap" id="dd-r1"><button class="dd-btn" onclick="ddToggle('dd-r1')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm1"></div></div></div>
+        <div class="field"><div class="fl">ROT 1-11</div><div class="dd-wrap" id="dd-r2"><button class="dd-btn" onclick="ddToggle('dd-r2')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm2"></div></div></div>
+        <div class="field"><div class="fl">Observaciones de Equipos</div><textarea id="obsEq" placeholder="Fallas, mantenimientos, novedades..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- 06 DEMORAS -->
+    <div class="card">
+      <div class="section-title"><span class="st-icon">⏱</span><span class="st-label">Demoras del Turno</span><div class="st-line"></div></div>
+      <div id="demList"></div>
+      <button class="btn-add" onclick="addRow('demList','Descripción de la demora...')">+ Agregar demora</button>
+    </div>
+
+    <!-- 07 SEGURIDAD -->
+    <div class="card">
+      <div class="section-title"><span class="st-icon">🛡</span><span class="st-label">Seguridad</span><div class="st-line"></div></div>
+      <div class="field"><div class="fl">Incidentes de Seguridad</div><textarea id="incidentes" placeholder="Ninguno / Descripción detallada..."></textarea></div>
+    </div>
+
+    <!-- 08 OBSERVACIONES -->
+    <div class="card">
+      <div class="section-title"><span class="st-icon">📋</span><span class="st-label">Observaciones Generales</span><div class="st-line"></div></div>
+      <div id="obsList"></div>
+      <button class="btn-add" onclick="addRow('obsList','Observación...')">+ Agregar observación</button>
+    </div>
+
+    <!-- 09 CAMINOS -->
+    <div class="card">
+      <div class="section-title"><span class="st-icon">🛣</span><span class="st-label">Caminos</span><div class="st-line"></div></div>
+      <div id="camList"></div>
+      <button class="btn-add" onclick="addRow('camList','Condición del camino...')">+ Agregar camino</button>
+    </div>
+
+    <button class="btn-gen" onclick="genReport()">Generar Reporte →</button>
+  </div>
+
+  <!-- ══ REPORTE ══ -->
+  <div id="repSection">
+    <div class="rep-bar">
+      <span class="rep-bar-lbl">Vista de Reporte</span>
+      <div class="rep-acts">
+        <button class="btn-edit2" onclick="goEdit()">← Editar</button>
+        <button class="btn-print2" onclick="window.print()">🖨 Imprimir</button>
+      </div>
+    </div>
+    <div class="report" id="repContent"></div>
+  </div>
+
+</div>
+
+<script>
+const ROT_EST=[
+  {val:"Operativa",               c:"#16a34a",bg:"#f0fdf4",br:"#bbf7d0"},
+  {val:"Mantenimiento",           c:"#dc2626",bg:"#fef2f2",br:"#fecaca"},
+  {val:"Falta de marcación",      c:"#d97706",bg:"#fffbeb",br:"#fde68a"},
+  {val:"Falta de área preparada", c:"#d97706",bg:"#fffbeb",br:"#fde68a"},
+  {val:"StandBy",                 c:"#2563eb",bg:"#eff6ff",br:"#bfdbfe"},
+  {val:"Falta de operador",       c:"#2563eb",bg:"#eff6ff",br:"#bfdbfe"},
+];
+const CLIMA_ICONS={"Despejado":"☀️","Lluvia":"🌧️","Alerta Roja / Rayos":"⚡","Neblina":"🌁"};
+let climaSel='';
+
+// INIT
+window.addEventListener('DOMContentLoaded',()=>{
+  const now=new Date();
+  document.getElementById('hDate').textContent=now.toLocaleDateString('es-MX',{weekday:'short',month:'short',day:'numeric'});
+  document.getElementById('fecha').valueAsDate=now;
+  ['rm0','rm1','rm2'].forEach((id,idx)=>{
+    const m=document.getElementById(id);
+    ROT_EST.forEach(e=>{
+      m.innerHTML+=`<div class="dd-item" data-val="${e.val}" data-c="${e.c}" data-bg="${e.bg}" data-br="${e.br}" onclick="ddSelect('dd-r${idx}',this)"><div class="dd-dot" style="background:${e.c}"></div><span style="color:${e.c};font-weight:600">${e.val}</span></div>`;
+    });
+  });
+  addRow('demList','Descripción de la demora...');
+  addRow('obsList','Observación...');
+  addRow('camList','Condición del camino...');
+  document.addEventListener('click',e=>{ if(!e.target.closest('.dd-wrap')) document.querySelectorAll('.dd-menu.open').forEach(m=>m.classList.remove('open')); });
+});
+
+// DROPDOWN
+function ddToggle(id){ const w=document.getElementById(id),m=w.querySelector('.dd-menu'),o=m.classList.contains('open'); document.querySelectorAll('.dd-menu.open').forEach(x=>x.classList.remove('open')); if(!o)m.classList.add('open'); }
+function ddSelect(id,el){ const w=document.getElementById(id),b=w.querySelector('.dd-btn'),m=w.querySelector('.dd-menu'),{val,c,bg,br}=el.dataset; b.style.background=bg; b.style.borderColor=br; b.querySelector('.dleft').innerHTML=`<div class="dd-dot" style="background:${c}"></div><span class="dd-val" style="color:${c}">${val}</span>`; b.dataset.v=val; m.classList.remove('open'); }
+function ddVal(id){ return (document.querySelector(`#${id} .dd-btn`)||{}).dataset?.v||''; }
+
+// CLIMA
+function setClima(el){ document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); if(climaSel===el.dataset.val){climaSel='';}else{el.classList.add('active');climaSel=el.dataset.val;} }
+
+// META
+function calcMeta(){ const t=parseFloat(document.getElementById('toneladas').value),m=parseFloat(document.getElementById('metaTon').value),ind=document.getElementById('metaInd'); if(!t||!m){ind.style.display='none';return;} const pct=Math.round((t/m)*100),ok=t>=m; ind.style.display='flex'; ind.className='meta-ind '+(ok?'ok':'fail'); ind.querySelector('.mi-lbl').textContent=ok?'✓ Meta alcanzada':'✗ Por debajo de meta'; ind.querySelector('.mi-pct').textContent=pct+'%'; }
+
+// DYNAMIC ROWS
+function addRow(listId,ph){ const l=document.getElementById(listId),d=document.createElement('div'); d.className='dyn-row'; const ta=document.createElement('textarea'); ta.placeholder=ph; ta.style.minHeight='50px'; const b=document.createElement('button'); b.className='btn-rm'; b.textContent='×'; b.onclick=()=>d.remove(); d.append(ta,b); l.appendChild(d); }
+function getRows(id){ return Array.from(document.querySelectorAll('#'+id+' textarea')).map(t=>t.value.trim()).filter(Boolean); }
+
+// REPORT HELPERS
+const ibox=(lbl,txt,blue)=>`<div class="ibox ${blue?'bl':'wh'}"><div class="ibox-l">${lbl}</div><div class="ibox-t">${txt}</div></div>`;
+const eqRow=(nm,val,tipo)=>{ const e=tipo==='carga'?(val==='Operativo'?{c:'#16a34a',bg:'#f0fdf4',br:'#bbf7d0'}:val==='Mantenimiento'?{c:'#dc2626',bg:'#fef2f2',br:'#fecaca'}:{c:'#94a3b8',bg:'#f8fafc',br:'#e2e8f0'}):( ROT_EST.find(x=>x.val===val)||{c:'#94a3b8',bg:'#f8fafc',br:'#e2e8f0'}); const badge=val?`<span class="eq-badge" style="color:${e.c};background:${e.bg};border-color:${e.br}">${val}</span>`:`<span class="eq-none">Sin registro</span>`; return `<div class="eq-row" style="background:${val?e.bg:'#fff'};border-color:${val?e.br:'var(--border)'}"><div class="eq-l"><div class="eq-dot" style="background:${val?e.c:'var(--subtle)'}${val?`;box-shadow:0 0 7px ${e.c}55`:''}"></div><span class="eq-nm">${nm}</span></div>${badge}</div>`; };
+const numItem=(i,t,gray)=>`<div class="num-item"><div class="num-badge" style="background:${gray?'#e2e8f0':'var(--text)'};color:${gray?'var(--muted)':'#fff'}">${i+1}</div><div class="num-txt">${t}</div></div>`;
+
+// GENERATE
+function genReport(){
+  const fecha=document.getElementById('fecha').value,
+        turno=document.getElementById('turno').value,
+        sup=document.getElementById('supervisor').value,
+        area=document.getElementById('area').value,
+        ton=parseFloat(document.getElementById('toneladas').value)||0,
+        meta=parseFloat(document.getElementById('metaTon').value)||0,
+        mat=document.getElementById('material').value,
+        carga=ddVal('dd-carga'),
+        cz=document.getElementById('condZona').value,
+        zd=document.getElementById('zonaDesc').value,
+        banco=document.getElementById('banco').value,
+        vol=document.getElementById('voladura').value,
+        r0=ddVal('dd-r0'),r1=ddVal('dd-r1'),r2=ddVal('dd-r2'),
+        obsEq=document.getElementById('obsEq').value,
+        inc=document.getElementById('incidentes').value,
+        dems=getRows('demList'),
+        obs=getRows('obsList'),
+        cams=getRows('camList');
+
+  const rots=[r0,r1,r2],RNAMES=['CAT6310','ROT 1-17','ROT 1-11'];
+  const ok=ton&&meta?ton>=meta:null, pct=ton&&meta?Math.round((ton/meta)*100):null;
+  const rAct=rots.filter(r=>r==='Operativa').length, rMant=rots.filter(r=>r==='Mantenimiento').length, rNoOp=rots.filter(r=>r&&r!=='Operativa').length;
+  const now=new Date();
+  const fechaFmt=fecha?new Date(fecha+'T12:00:00').toLocaleDateString('es-MX',{weekday:'long',year:'numeric',month:'long',day:'numeric'}):'—';
+  const color=ok===null?'#64748b':ok?'var(--green)':'var(--red)';
+
+  // Progress
+  let prog='';
+  if(ton&&meta){ const fp=Math.min((ton/meta)*100,100),diff=ton-meta; prog=`<div class="prog"><div class="prog-t"><span class="prog-a" style="color:${color}">${ton.toLocaleString()} <small>ton</small></span><span class="prog-m">Meta: ${meta.toLocaleString()} ton</span></div><div class="prog-bg"><div class="prog-fill" style="width:${fp}%;background:${color}"></div></div><div class="prog-b"><span class="prog-d" style="color:${color}">${diff>=0?'+':''}${diff.toLocaleString()} tn</span><span class="prog-p" style="color:${color}">${pct}%</span></div></div>`; }
+
+  // Clima
+  const ci=CLIMA_ICONS[climaSel]||'';
+  let cal='';
+  if(climaSel==='Alerta Roja / Rayos')cal=`<div class="clima-al" style="color:var(--red)">⚡ Protocolo de alerta activo</div>`;
+  else if(climaSel==='Lluvia')cal=`<div class="clima-al" style="color:var(--blue)">Verificar condiciones de piso</div>`;
+  else if(climaSel==='Neblina')cal=`<div class="clima-al" style="color:var(--amber)">Reducir velocidad de operación</div>`;
+  const climaHTML=climaSel?`<div class="clima-box"><div class="clima-lbl">Condición Climática</div><div class="clima-inner"><span class="clima-ico">${ci}</span><div><div class="clima-nm">${climaSel}</div>${cal}</div></div></div>`:'';
+
+  // Demoras
+  const demHTML=dems.length===0
+    ?`<div style="display:flex;align-items:center;gap:7px"><div class="dem-dot" style="background:var(--green)"></div><span style="font-size:0.82rem;color:var(--green);font-weight:600">Sin demoras registradas</span></div>`
+    :dems.map(d=>`<div class="dem-item"><div class="dem-dot" style="background:var(--red)"></div><span style="font-size:0.8rem;color:var(--text);line-height:1.5">${d}</span></div>`).join('');
+
+  // Rot summary
+  let rotSum='';
+  if(rAct>0||rNoOp>0){ let t=rAct===3?`<span style="color:var(--green);font-weight:600">✓ Todas las rotarias operaron durante el turno.</span>`:`<span style="color:var(--green);font-weight:600">${rAct} de 3 operativas.</span>${rMant>0?` <span style="color:var(--red)">${rMant} en mantenimiento.</span>`:''}${(rNoOp-rMant)>0?` <span style="color:var(--amber)">${rNoOp-rMant} con restricción.</span>`:''}`;
+  if(obsEq)t+=`<div style="margin-top:5px;color:var(--muted);font-style:italic;font-size:0.76rem">${obsEq}</div>`; rotSum=`<div class="rot-sum">${t}</div>`; }
+
+  document.getElementById('repContent').innerHTML=`
+    <div class="rh">
+      <div class="rh-top">
+        <div><div class="rh-ey">Reporte Operacional de Turno</div><div class="rh-date">${fechaFmt}</div><div class="rh-sub">${turno||'—'} · ${area||'—'}</div></div>
+        <div class="rh-right"><div class="rh-sl">SUPERVISOR</div><div class="rh-name">${sup||'—'}</div><div class="rh-time">Emitido ${now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</div></div>
+      </div>
+    </div>
+    <div class="rb">
+      <div class="rs">
+        <div class="kpi-grid">
+          <div class="kpi" style="border-top:3px solid ${color}"><div class="kpi-l">Toneladas Movidas</div><div class="kpi-v" style="color:${color}">${ton?ton.toLocaleString()+' tn':'—'}</div><div class="kpi-s b">${mat||'Sin especificar'}</div></div>
+          <div class="kpi" style="border-top:3px solid var(--blue)"><div class="kpi-l">Meta del Turno</div><div class="kpi-v" style="color:var(--blue)">${meta?meta.toLocaleString()+' tn':'—'}</div><div class="kpi-s">toneladas esperadas</div></div>
+        </div>
+        ${prog}
+      </div>
+      <div class="rs">
+        <div class="rs-title">Contexto del Turno</div>
+        <div class="ctx-row">${climaHTML}<div class="dem-box"><div class="dem-t">Demoras del Turno</div>${demHTML}</div></div>
+      </div>
+      <div class="rs">
+        <div class="rs-title">Estado de Equipos</div>
+        <div class="eq-grid">
+          <div><div class="eq-ct">⛏ Equipo de Carga</div>${eqRow('Pala P&H 5-29',carga,'carga')}${cz?ibox('Condiciones zona de carga',cz,true):''}${zd?ibox('Zona de descarga',zd,true):''}${banco?ibox('Banco',banco,true):''}${vol?ibox('Voladura',vol,true):''}</div>
+          <div><div class="eq-ct">🔄 Rotarias</div>${RNAMES.map((n,i)=>eqRow(n,rots[i],'rotaria')).join('')}${rotSum}</div>
+        </div>
+      </div>
+      <div class="rs">
+        <div class="rs-title">Seguridad</div>
+        ${inc?`<div class="seg-inc"><div class="seg-tag">⚠ Incidente Reportado</div><div class="seg-txt">${inc}</div></div>`:`<div class="seg-ok"><span>✅</span><span>Turno sin incidentes de seguridad reportados.</span></div>`}
+      </div>
+      ${obs.length?`<div class="rs"><div class="rs-title">Observaciones y Pendientes</div><div class="num-list">${obs.map((o,i)=>numItem(i,o,false)).join('')}</div></div>`:''}
+      ${cams.length?`<div class="rs"><div class="rs-title">Caminos</div><div class="num-list">${cams.map((c,i)=>numItem(i,c,true)).join('')}</div></div>`:''}
+      <div class="rep-ft"><span>Plataforma de Reporte Operacional · Turno</span><span>${now.toLocaleDateString('es-MX')}</span></div>
+    </div>`;
+
+  document.getElementById('formSection').style.display='none';
+  document.getElementById('repSection').classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goEdit(){ document.getElementById('repSection').classList.remove('on'); document.getElementById('formSection').style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
+</script>
+</body>
+</html>
