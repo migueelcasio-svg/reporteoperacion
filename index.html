@@ -103,17 +103,17 @@
   .report { background:#f8fafc; border-radius:16px; overflow:hidden; border:1.5px solid var(--border); }
   .rh { background:var(--text); padding:24px 20px; color:#fff; }
   .rh-top { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
-  .rh-ey { font-family:var(--mono); font-size:0.5rem; letter-spacing:3px; color:rgba(255,255,255,0.38); text-transform:uppercase; margin-bottom:5px; }
+  .rh-ey { font-family:var(--mono); font-size:0.5rem; letter-spacing:3px; color:rgba(255,255,255,0.7); text-transform:uppercase; margin-bottom:5px; }
   .rh-date { font-family:var(--serif); font-size:1.4rem; color:#fff; line-height:1.1; margin-bottom:4px; text-transform:capitalize; }
   .rh-sub { font-family:var(--sans); font-size:0.8rem; color:rgba(255,255,255,0.52); }
   .rh-right { text-align:right; }
-  .rh-sl { font-family:var(--mono); font-size:0.48rem; color:rgba(255,255,255,0.35); letter-spacing:2px; margin-bottom:3px; }
+  .rh-sl { font-family:var(--mono); font-size:0.48rem; color:rgba(255,255,255,0.72); letter-spacing:2px; margin-bottom:3px; }
   .rh-name { font-weight:700; font-size:0.92rem; color:#fff; }
   .rh-time { font-family:var(--mono); font-size:0.48rem; color:rgba(255,255,255,0.28); margin-top:4px; }
 
   .rb { padding:20px 16px; }
   .rs { margin-bottom:22px; }
-  .rs-title { font-family:var(--mono); font-size:0.54rem; letter-spacing:3px; color:var(--muted); text-transform:uppercase; margin-bottom:11px; display:flex; align-items:center; gap:8px; }
+  .rs-title { font-family:var(--mono); font-size:0.54rem; letter-spacing:3px; color:var(--muted); text-transform:uppercase; margin-bottom:11px; display:flex; align-items:center; gap:8px; font-weight:700; }
   .rs-title::after { content:''; flex:1; height:1px; background:var(--border); }
 
   .kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
@@ -171,6 +171,8 @@
 
   .num-list { display:flex; flex-direction:column; gap:7px; }
   .num-item { background:#fff; border:1.5px solid var(--border); border-radius:11px; padding:11px 14px; display:flex; gap:11px; align-items:flex-start; }
+  .num-item.amber { background:var(--amber-bg); border-color:var(--amber-b); }
+  .num-item.blue  { background:var(--blue-bg);  border-color:var(--blue-b); }
   .num-badge { color:#fff; font-family:var(--mono); font-size:0.6rem; font-weight:700; width:21px; height:21px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
   .num-txt { font-size:0.84rem; color:var(--text); line-height:1.7; }
 
@@ -288,10 +290,22 @@
     <div class="card">
       <div class="section-title"><span class="st-icon">🔄</span><span class="st-label">Rotarias</span><div class="st-line"></div></div>
       <div class="fstack">
-        <div class="field"><div class="fl">CAT6310</div><div class="dd-wrap" id="dd-r0"><button class="dd-btn" onclick="ddToggle('dd-r0')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm0"></div></div></div>
-        <div class="field"><div class="fl">ROT 1-17</div><div class="dd-wrap" id="dd-r1"><button class="dd-btn" onclick="ddToggle('dd-r1')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm1"></div></div></div>
-        <div class="field"><div class="fl">ROT 1-11</div><div class="dd-wrap" id="dd-r2"><button class="dd-btn" onclick="ddToggle('dd-r2')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm2"></div></div></div>
-        <div class="field"><div class="fl">Observaciones de Equipos</div><textarea id="obsEq" placeholder="Fallas, mantenimientos, novedades..."></textarea></div>
+        <div>
+          <div class="fl" style="font-family:var(--mono);font-size:0.54rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:5px;">CAT6310</div>
+          <div class="dd-wrap" id="dd-r0"><button class="dd-btn" onclick="ddToggle('dd-r0')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm0"></div></div>
+          <textarea id="obsR0" placeholder="Comentario CAT6310..." style="margin-top:6px;min-height:44px;font-size:0.82rem;"></textarea>
+        </div>
+        <div>
+          <div class="fl" style="font-family:var(--mono);font-size:0.54rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:5px;">ROT 1-17</div>
+          <div class="dd-wrap" id="dd-r1"><button class="dd-btn" onclick="ddToggle('dd-r1')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm1"></div></div>
+          <textarea id="obsR1" placeholder="Comentario ROT 1-17..." style="margin-top:6px;min-height:44px;font-size:0.82rem;"></textarea>
+        </div>
+        <div>
+          <div class="fl" style="font-family:var(--mono);font-size:0.54rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:5px;">ROT 1-11</div>
+          <div class="dd-wrap" id="dd-r2"><button class="dd-btn" onclick="ddToggle('dd-r2')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm2"></div></div>
+          <textarea id="obsR2" placeholder="Comentario ROT 1-11..." style="margin-top:6px;min-height:44px;font-size:0.82rem;"></textarea>
+        </div>
+        <div class="field"><div class="fl">Observaciones Generales de Equipos</div><textarea id="obsEq" placeholder="Fallas, mantenimientos, novedades..."></textarea></div>
       </div>
     </div>
 
@@ -388,7 +402,7 @@ function getRows(id){ return Array.from(document.querySelectorAll('#'+id+' texta
 // REPORT HELPERS
 const ibox=(lbl,txt,blue)=>`<div class="ibox ${blue?'bl':'wh'}"><div class="ibox-l">${lbl}</div><div class="ibox-t">${txt}</div></div>`;
 const eqRow=(nm,val,tipo)=>{ const e=tipo==='carga'?(val==='Operativo'?{c:'#16a34a',bg:'#f0fdf4',br:'#bbf7d0'}:val==='Mantenimiento'?{c:'#dc2626',bg:'#fef2f2',br:'#fecaca'}:{c:'#94a3b8',bg:'#f8fafc',br:'#e2e8f0'}):( ROT_EST.find(x=>x.val===val)||{c:'#94a3b8',bg:'#f8fafc',br:'#e2e8f0'}); const badge=val?`<span class="eq-badge" style="color:${e.c};background:${e.bg};border-color:${e.br}">${val}</span>`:`<span class="eq-none">Sin registro</span>`; return `<div class="eq-row" style="background:${val?e.bg:'#fff'};border-color:${val?e.br:'var(--border)'}"><div class="eq-l"><div class="eq-dot" style="background:${val?e.c:'var(--subtle)'}${val?`;box-shadow:0 0 7px ${e.c}55`:''}"></div><span class="eq-nm">${nm}</span></div>${badge}</div>`; };
-const numItem=(i,t,gray)=>`<div class="num-item"><div class="num-badge" style="background:${gray?'#e2e8f0':'var(--text)'};color:${gray?'var(--muted)':'#fff'}">${i+1}</div><div class="num-txt">${t}</div></div>`;
+const numItem=(i,t,cls)=>`<div class="num-item ${cls||''}"><div class="num-badge" style="background:${cls==='amber'?'var(--amber)':cls==='blue'?'var(--blue)':'var(--text)'};color:#fff">${i+1}</div><div class="num-txt">${t}</div></div>`;
 
 // GENERATE
 function genReport(){
@@ -405,6 +419,9 @@ function genReport(){
         banco=document.getElementById('banco').value,
         vol=document.getElementById('voladura').value,
         r0=ddVal('dd-r0'),r1=ddVal('dd-r1'),r2=ddVal('dd-r2'),
+        obsR0=document.getElementById('obsR0').value,
+        obsR1=document.getElementById('obsR1').value,
+        obsR2=document.getElementById('obsR2').value,
         obsEq=document.getElementById('obsEq').value,
         inc=document.getElementById('incidentes').value,
         dems=getRows('demList'),
@@ -463,15 +480,15 @@ function genReport(){
         <div class="rs-title">Estado de Equipos</div>
         <div class="eq-grid">
           <div><div class="eq-ct">⛏ Equipo de Carga</div>${eqRow('Pala P&H 5-29',carga,'carga')}${cz?ibox('Condiciones zona de carga',cz,true):''}${zd?ibox('Zona de descarga',zd,true):''}${banco?ibox('Banco',banco,true):''}${vol?ibox('Voladura',vol,true):''}</div>
-          <div><div class="eq-ct">🔄 Rotarias</div>${RNAMES.map((n,i)=>eqRow(n,rots[i],'rotaria')).join('')}${rotSum}</div>
+          <div><div class="eq-ct">🔄 Rotarias</div>${RNAMES.map((n,i)=>{ const obsArr=[obsR0,obsR1,obsR2]; const obs=obsArr[i]; return eqRow(n,rots[i],'rotaria')+(obs?`<div class="ibox wh" style="margin-bottom:3px"><div class="ibox-t" style="font-size:0.84rem;color:var(--text);line-height:1.7;font-style:normal;font-family:var(--sans)">${obs}</div></div>`:'');; }).join('')}${rotSum}</div>
         </div>
       </div>
       <div class="rs">
         <div class="rs-title">Seguridad</div>
         ${inc?`<div class="seg-inc"><div class="seg-tag">⚠ Incidente Reportado</div><div class="seg-txt">${inc}</div></div>`:`<div class="seg-ok"><span>✅</span><span>Turno sin incidentes de seguridad reportados.</span></div>`}
       </div>
-      ${obs.length?`<div class="rs"><div class="rs-title">Observaciones y Pendientes</div><div class="num-list">${obs.map((o,i)=>numItem(i,o,false)).join('')}</div></div>`:''}
-      ${cams.length?`<div class="rs"><div class="rs-title">Caminos</div><div class="num-list">${cams.map((c,i)=>numItem(i,c,true)).join('')}</div></div>`:''}
+      ${obs.length?`<div class="rs"><div class="rs-title">Observaciones y Pendientes</div><div class="num-list">${obs.map((o,i)=>numItem(i,o,'amber')).join('')}</div></div>`:''}
+      ${cams.length?`<div class="rs"><div class="rs-title">Caminos</div><div class="num-list">${cams.map((c,i)=>numItem(i,c,'blue')).join('')}</div></div>`:''}
       <div class="rep-ft"><span>Plataforma de Reporte Operacional · Turno</span><span>${now.toLocaleDateString('es-MX')}</span></div>
     </div>`;
 
