@@ -134,8 +134,8 @@
   .prog-d { font-size:0.73rem; font-weight:600; }
   .prog-p { font-family:var(--mono); font-size:0.68rem; font-weight:700; }
 
-  .ctx-row { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; }
-  .clima-box { display:inline-flex; flex-direction:column; gap:5px; background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:11px 14px; }
+  .ctx-row { display:flex; gap:10px; flex-wrap:wrap; align-items:stretch; }
+  .clima-box { display:inline-flex; flex-direction:column; gap:5px; background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:11px 14px; width:100%; }
   .clima-lbl { font-family:var(--mono); font-size:0.5rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
   .clima-inner { display:flex; align-items:center; gap:9px; }
   .clima-ico { font-size:1.5rem; }
@@ -146,7 +146,8 @@
   .dem-item { display:flex; align-items:flex-start; gap:7px; margin-bottom:5px; }
   .dem-dot { width:6px; height:6px; border-radius:50%; margin-top:5px; flex-shrink:0; }
 
-  .eq-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .eq-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:stretch; }
+  .eq-col { display:flex; flex-direction:column; }
   .eq-ct { font-weight:700; font-size:0.78rem; color:var(--text); margin-bottom:7px; }
   .eq-row { display:flex; align-items:center; justify-content:space-between; padding:10px 13px; border-radius:10px; margin-bottom:5px; border:1.5px solid; }
   .eq-l { display:flex; align-items:center; gap:9px; }
@@ -293,17 +294,34 @@
         <div>
           <div class="fl" style="font-family:var(--mono);font-size:0.54rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:5px;">CAT6310</div>
           <div class="dd-wrap" id="dd-r0"><button class="dd-btn" onclick="ddToggle('dd-r0')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm0"></div></div>
-          <textarea id="obsR0" placeholder="Comentario CAT6310..." style="margin-top:6px;min-height:44px;font-size:0.82rem;"></textarea>
+          <div style="display:grid;grid-template-columns:1fr 4fr;gap:6px;margin-top:6px;">
+            <div><div class="fl" style="font-family:var(--mono);font-size:0.48rem;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;">Metros</div><input type="number" id="mbR0" placeholder="0" style="min-height:44px;font-size:0.82rem;text-align:center;"></div>
+            <div><div class="fl" style="font-family:var(--mono);font-size:0.48rem;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;">Comentarios</div><textarea id="obsR0" placeholder="Comentario..." style="min-height:44px;font-size:0.82rem;"></textarea></div>
+          </div>
         </div>
         <div>
           <div class="fl" style="font-family:var(--mono);font-size:0.54rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:5px;">ROT 1-17</div>
           <div class="dd-wrap" id="dd-r1"><button class="dd-btn" onclick="ddToggle('dd-r1')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm1"></div></div>
-          <textarea id="obsR1" placeholder="Comentario ROT 1-17..." style="margin-top:6px;min-height:44px;font-size:0.82rem;"></textarea>
+          <div style="display:grid;grid-template-columns:1fr 4fr;gap:6px;margin-top:6px;">
+            <div><div class="fl" style="font-family:var(--mono);font-size:0.48rem;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;">Metros</div><input type="number" id="mbR1" placeholder="0" style="min-height:44px;font-size:0.82rem;text-align:center;"></div>
+            <div><div class="fl" style="font-family:var(--mono);font-size:0.48rem;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;">Comentarios</div><textarea id="obsR1" placeholder="Comentario..." style="min-height:44px;font-size:0.82rem;"></textarea></div>
+          </div>
         </div>
         <div>
           <div class="fl" style="font-family:var(--mono);font-size:0.54rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:5px;">ROT 1-11</div>
           <div class="dd-wrap" id="dd-r2"><button class="dd-btn" onclick="ddToggle('dd-r2')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm2"></div></div>
-          <textarea id="obsR2" placeholder="Comentario ROT 1-11..." style="margin-top:6px;min-height:44px;font-size:0.82rem;"></textarea>
+          <div style="display:grid;grid-template-columns:1fr 4fr;gap:6px;margin-top:6px;">
+            <div><div class="fl" style="font-family:var(--mono);font-size:0.48rem;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;">Metros</div><input type="number" id="mbR2" placeholder="0" style="min-height:44px;font-size:0.82rem;text-align:center;"></div>
+            <div><div class="fl" style="font-family:var(--mono);font-size:0.48rem;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;">Comentarios</div><textarea id="obsR2" placeholder="Comentario..." style="min-height:44px;font-size:0.82rem;"></textarea></div>
+          </div>
+        </div>
+        <div>
+          <div class="fl" style="font-family:var(--mono);font-size:0.54rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:5px;">ROT 1-18</div>
+          <div class="dd-wrap" id="dd-r3"><button class="dd-btn" onclick="ddToggle('dd-r3')"><div class="dleft"><span class="dd-val" style="color:var(--muted)">Seleccionar estado</span></div><span class="dd-arr">▼</span></button><div class="dd-menu" id="rm3"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 4fr;gap:6px;margin-top:6px;">
+            <div><div class="fl" style="font-family:var(--mono);font-size:0.48rem;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;">Metros</div><input type="number" id="mbR3" placeholder="0" style="min-height:44px;font-size:0.82rem;text-align:center;"></div>
+            <div><div class="fl" style="font-family:var(--mono);font-size:0.48rem;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;">Comentarios</div><textarea id="obsR3" placeholder="Comentario..." style="min-height:44px;font-size:0.82rem;"></textarea></div>
+          </div>
         </div>
         <div class="field"><div class="fl">Observaciones Generales de Equipos</div><textarea id="obsEq" placeholder="Fallas, mantenimientos, novedades..."></textarea></div>
       </div>
@@ -372,7 +390,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   const now=new Date();
   document.getElementById('hDate').textContent=now.toLocaleDateString('es-MX',{weekday:'short',month:'short',day:'numeric'});
   document.getElementById('fecha').valueAsDate=now;
-  ['rm0','rm1','rm2'].forEach((id,idx)=>{
+  ['rm0','rm1','rm2','rm3'].forEach((id,idx)=>{
     const m=document.getElementById(id);
     ROT_EST.forEach(e=>{
       m.innerHTML+=`<div class="dd-item" data-val="${e.val}" data-c="${e.c}" data-bg="${e.bg}" data-br="${e.br}" onclick="ddSelect('dd-r${idx}',this)"><div class="dd-dot" style="background:${e.c}"></div><span style="color:${e.c};font-weight:600">${e.val}</span></div>`;
@@ -418,17 +436,23 @@ function genReport(){
         zd=document.getElementById('zonaDesc').value,
         banco=document.getElementById('banco').value,
         vol=document.getElementById('voladura').value,
-        r0=ddVal('dd-r0'),r1=ddVal('dd-r1'),r2=ddVal('dd-r2'),
+        r0=ddVal('dd-r0'),r1=ddVal('dd-r1'),r2=ddVal('dd-r2'),r3=ddVal('dd-r3'),
         obsR0=document.getElementById('obsR0').value,
         obsR1=document.getElementById('obsR1').value,
         obsR2=document.getElementById('obsR2').value,
+        obsR3=document.getElementById('obsR3').value,
+        mbR0=document.getElementById('mbR0').value,
+        mbR1=document.getElementById('mbR1').value,
+        mbR2=document.getElementById('mbR2').value,
+        mbR3=document.getElementById('mbR3').value,
         obsEq=document.getElementById('obsEq').value,
         inc=document.getElementById('incidentes').value,
         dems=getRows('demList'),
         obs=getRows('obsList'),
         cams=getRows('camList');
 
-  const rots=[r0,r1,r2],RNAMES=['CAT6310','ROT 1-17','ROT 1-11'];
+  const rots=[r0,r1,r2,r3],RNAMES=['CAT6310','ROT 1-17','ROT 1-11','ROT 1-18'];
+  const obsRArr=[obsR0,obsR1,obsR2,obsR3], mbArr=[mbR0,mbR1,mbR2,mbR3];
   const ok=ton&&meta?ton>=meta:null, pct=ton&&meta?Math.round((ton/meta)*100):null;
   const rAct=rots.filter(r=>r==='Operativa').length, rMant=rots.filter(r=>r==='Mantenimiento').length, rNoOp=rots.filter(r=>r&&r!=='Operativa').length;
   const now=new Date();
@@ -454,7 +478,7 @@ function genReport(){
 
   // Rot summary
   let rotSum='';
-  if(rAct>0||rNoOp>0){ let t=rAct===3?`<span style="color:var(--green);font-weight:600">✓ Todas las rotarias operaron durante el turno.</span>`:`<span style="color:var(--green);font-weight:600">${rAct} de 3 operativas.</span>${rMant>0?` <span style="color:var(--red)">${rMant} en mantenimiento.</span>`:''}${(rNoOp-rMant)>0?` <span style="color:var(--amber)">${rNoOp-rMant} con restricción.</span>`:''}`;
+  if(rAct>0||rNoOp>0){ let t=rAct===4?`<span style="color:var(--green);font-weight:600">✓ Todas las rotarias operaron durante el turno.</span>`:`<span style="color:var(--green);font-weight:600">${rAct} de 4 operativas.</span>${rMant>0?` <span style="color:var(--red)">${rMant} en mantenimiento.</span>`:''}${(rNoOp-rMant)>0?` <span style="color:var(--amber)">${rNoOp-rMant} con restricción.</span>`:''}`;
   if(obsEq)t+=`<div style="margin-top:5px;color:var(--muted);font-style:italic;font-size:0.76rem">${obsEq}</div>`; rotSum=`<div class="rot-sum">${t}</div>`; }
 
   document.getElementById('repContent').innerHTML=`
@@ -474,13 +498,31 @@ function genReport(){
       </div>
       <div class="rs">
         <div class="rs-title">Contexto del Turno</div>
-        <div class="ctx-row">${climaHTML}<div class="dem-box"><div class="dem-t">Demoras del Turno</div>${demHTML}</div></div>
+        <div class="eq-grid">
+          <div class="eq-col">
+            <div class="eq-ct">⛏ Equipo de Carga</div>
+            ${eqRow('Pala P&H 5-29',carga,'carga')}
+            ${cz?ibox('Condiciones zona de carga',cz,true):''}
+            ${zd?ibox('Zona de descarga',zd,true):''}
+            ${banco?ibox('Banco',banco,true):''}
+            ${vol?ibox('Voladura',vol,true):''}
+          </div>
+          <div class="dem-box" style="min-width:0">
+            <div class="dem-t">Demoras del Turno</div>
+            ${demHTML}
+          </div>
+        </div>
       </div>
       <div class="rs">
         <div class="rs-title">Estado de Equipos</div>
         <div class="eq-grid">
-          <div><div class="eq-ct">⛏ Equipo de Carga</div>${eqRow('Pala P&H 5-29',carga,'carga')}${cz?ibox('Condiciones zona de carga',cz,true):''}${zd?ibox('Zona de descarga',zd,true):''}${banco?ibox('Banco',banco,true):''}${vol?ibox('Voladura',vol,true):''}</div>
-          <div><div class="eq-ct">🔄 Rotarias</div>${RNAMES.map((n,i)=>{ const obsArr=[obsR0,obsR1,obsR2]; const obs=obsArr[i]; return eqRow(n,rots[i],'rotaria')+(obs?`<div class="ibox wh" style="margin-bottom:3px"><div class="ibox-t" style="font-size:0.84rem;color:var(--text);line-height:1.7;font-style:normal;font-family:var(--sans)">${obs}</div></div>`:'');; }).join('')}${rotSum}</div>
+          <div class="eq-col">
+            <div class="eq-ct">🔄 Rotarias</div>
+            ${RNAMES.map((n,i)=>{ const obs=obsRArr[i]; const mb=mbArr[i]; const hasExtra=obs||mb; return eqRow(n,rots[i],'rotaria')+(hasExtra?`<div style="display:grid;grid-template-columns:1fr 4fr;gap:5px;margin-top:4px;margin-bottom:3px;"><div style="background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:7px 8px;text-align:center;"><div style="font-family:var(--mono);font-size:0.44rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Metros</div><div style="font-family:var(--mono);font-size:0.84rem;font-weight:700;color:var(--text)">${mb||'—'}</div></div><div style="background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:7px 10px;"><div style="font-family:var(--mono);font-size:0.44rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Comentarios</div><div style="font-size:0.82rem;color:var(--text);line-height:1.6;font-family:var(--sans)">${obs||'—'}</div></div></div>`:''); }).join('')}${rotSum}
+          </div>
+          <div class="eq-col" style="align-items:flex-start">
+            ${climaHTML}
+          </div>
         </div>
       </div>
       <div class="rs">
