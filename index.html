@@ -135,7 +135,7 @@
   .prog-p { font-family:var(--mono); font-size:0.68rem; font-weight:700; }
 
   .ctx-row { display:flex; gap:10px; flex-wrap:wrap; align-items:stretch; }
-  .clima-box { display:inline-flex; flex-direction:column; gap:5px; background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:11px 14px; width:100%; }
+  .clima-box { display:flex; flex-direction:column; gap:5px; background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:11px 14px; width:100%; }
   .clima-lbl { font-family:var(--mono); font-size:0.5rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
   .clima-inner { display:flex; align-items:center; gap:9px; }
   .clima-ico { font-size:1.5rem; }
@@ -507,22 +507,23 @@ function genReport(){
             ${banco?ibox('Banco',banco,true):''}
             ${vol?ibox('Voladura',vol,true):''}
           </div>
-          <div class="dem-box" style="min-width:0">
-            <div class="dem-t">Demoras del Turno</div>
-            ${demHTML}
+          <div class="eq-col">
+            <div class="dem-box" style="min-width:0;flex:1">
+              <div class="dem-t">Demoras del Turno</div>
+              ${demHTML}
+            </div>
+            ${climaHTML ? `<div style="margin-top:8px">${climaHTML}</div>` : ''}
           </div>
         </div>
       </div>
       <div class="rs">
         <div class="rs-title">Estado de Equipos</div>
-        <div class="eq-grid">
-          <div class="eq-col">
-            <div class="eq-ct">🔄 Rotarias</div>
-            ${RNAMES.map((n,i)=>{ const obs=obsRArr[i]; const mb=mbArr[i]; const hasExtra=obs||mb; return eqRow(n,rots[i],'rotaria')+(hasExtra?`<div style="display:grid;grid-template-columns:1fr 4fr;gap:5px;margin-top:4px;margin-bottom:3px;"><div style="background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:7px 8px;text-align:center;"><div style="font-family:var(--mono);font-size:0.44rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Metros</div><div style="font-family:var(--mono);font-size:0.84rem;font-weight:700;color:var(--text)">${mb||'—'}</div></div><div style="background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:7px 10px;"><div style="font-family:var(--mono);font-size:0.44rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Comentarios</div><div style="font-size:0.82rem;color:var(--text);line-height:1.6;font-family:var(--sans)">${obs||'—'}</div></div></div>`:''); }).join('')}${rotSum}
+        <div>
+          <div class="eq-ct">🔄 Rotarias</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            ${RNAMES.map((n,i)=>{ const obs=obsRArr[i]; const mb=mbArr[i]; const hasExtra=obs||mb; return `<div>${eqRow(n,rots[i],'rotaria')}${hasExtra?`<div style="display:grid;grid-template-columns:1fr 4fr;gap:5px;margin-top:4px;"><div style="background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:7px 8px;text-align:center;"><div style="font-family:var(--mono);font-size:0.44rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Metros</div><div style="font-family:var(--mono);font-size:0.84rem;font-weight:700;color:var(--text)">${mb||'—'}</div></div><div style="background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:7px 10px;"><div style="font-family:var(--mono);font-size:0.44rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Comentarios</div><div style="font-size:0.82rem;color:var(--text);line-height:1.6;font-family:var(--sans)">${obs||'—'}</div></div></div>`:''}</div>`; }).join('')}
           </div>
-          <div class="eq-col" style="align-items:flex-start">
-            ${climaHTML}
-          </div>
+          ${rotSum}
         </div>
       </div>
       <div class="rs">
